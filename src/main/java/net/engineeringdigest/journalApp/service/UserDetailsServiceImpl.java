@@ -1,5 +1,4 @@
 //journalApp/src/main/java/net/engineeringdigest/journalApp/service/UserDetailsServiceImpl.java
-
 package net.engineeringdigest.journalApp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +23,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getUserName())
                     .password(user.getPassword())
-                    .roles("USER") // or user.getRoles().toArray(new String[0]) if roles are in DB
+                    .roles(user.getRoles().toArray(new String[0])) // ✅ load roles dynamically
                     .build();
         }
         throw new UsernameNotFoundException("User not found with username: " + username);
     }
-    
+
 }
