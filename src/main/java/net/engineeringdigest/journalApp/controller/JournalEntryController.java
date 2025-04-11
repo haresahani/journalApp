@@ -93,37 +93,23 @@ public class JournalEntryController {
         }
     }
 
-    @PutMapping("id/{userName}/{myId}")
-    public ResponseEntity<?> updateJournalEntry(
-            @PathVariable String myId,
-            @RequestBody JournalEntry newEntry,
-            @PathVariable String userName) {
-        try {
-            ObjectId objectId = new ObjectId(myId);
-            JournalEntry oldEntry = journalEntryService.findById(objectId).orElse(null);
-
-            if (oldEntry != null) {
-                // Update title if new one is provided
-                if (!newEntry.getTitle().isEmpty()) {
-                    oldEntry.setTitle(newEntry.getTitle());
-                }
-
-                // Update content if new one is provided
-                if (newEntry.getContent() != null && !newEntry.getContent().isEmpty()) {
-                    oldEntry.setContent(newEntry.getContent());
-                }
-
-                // Save updated entry
-                journalEntryService.saveEntry(oldEntry);
-
-                return new ResponseEntity<>(oldEntry, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Journal entry not found", HttpStatus.NOT_FOUND);
+    @PutMapping("id/{myId}")
+    public ResponseEntity<?> updateJournalById(@PathVariable ObjectId myId, @RequestBody JournalEntry newEntry) {
+        org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = userService.findByUserName(userName);
+        List<JournalEntry> collect = user.getJournalEntries().stream().filter(x -> x.getId().equals(myId)).collect(Collectors.toList());
+        if (!collect.isEmpty()) {
+            Optional<JournalEntry> journalEntry = journalEntryService.findById(myId);
+            if (journalEntry.isPresent()) {
+                JournalEntry old = journalEntry.get();
+                old.setTitle(newEntry.getTitle() != null && !newEntry.getTitle().equals("") ? newEntry.getTitle() : old.getTitle());
+                old.setContent(newEntry.getContent() != null && !newEntry.getContent().equals("") ? newEntry.getContent() : old.getContent());
+                journalEntryService.saveEntry(old);
+                return new ResponseEntity<>(old, HttpStatus.OK);
             }
-
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>("Invalid ObjectId format", HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 }
