@@ -1,6 +1,6 @@
 // journalApp/src/test/java/net/engineeringdigest/journalApp/service/UserArgumentsProvider.java
 
-package net.engineeringdigest.journalApp.service;
+package net.engineeringdigest.service;
 
 import net.engineeringdigest.journalApp.entity.User;
 import org.junit.jupiter.api.extension.ExtensionContext;

@@ -1,3 +1,31 @@
 spring:
-  profiles:
-    active: prod
+  redis:
+    host: redis-18522.c305.ap-south-1-1.ec2.redns.redis-cloud.com
+    port: 18522
+    password: CbeP19NTH8B1GLj7eSlzoz3NE60kfOgS
+    ssl: true
+  data:
+    mongodb:
+      uri: mongodb+srv://haresahani:haresahani@cluster0.d2rcuhq.mongodb.net/journaldb?retryWrites=true&w=majority&appName=Cluster0
+      database: journaldb
+      auto-index-creation: true
+  mail:
+    host: smpt.gmail.com
+    port: 587
+    username: harecareer@gmail.com
+    password: fjbv nboc wlwt hbqq
+    properties:
+      mail:
+        smpt:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /journal
+
+weather:
+  api:
+    key: e0f292f49dc70322e847b74e6813937b
